@@ -2,7 +2,8 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: |
+  - name: "Setup and Start"
+    init: |
       sudo apt update
       sudo apt install -y postgresql postgresql-contrib libpq-dev
       sudo service postgresql start
@@ -15,13 +16,9 @@ tasks:
       sed -i 's/password:.*/password: password/' config/database.yml
       bin/setup
       yarn install
-  - command: bin/rails server -b 0.0.0.0
+    command: |
+      bin/rails server -b 0.0.0.0
 
 ports:
   - port: 3000
     onOpen: open-preview
-
-env:
-  POSTGRES_USERNAME: postgres
-  POSTGRES_PASSWORD: password
-  POSTGRES_DATABASE: chatwoot_dev
