@@ -1,0 +1,27 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: |
+      sudo apt update
+      sudo apt install -y postgresql postgresql-contrib libpq-dev
+      sudo service postgresql start
+      sudo -u postgres psql -c "CREATE USER postgres WITH PASSWORD 'password';"
+      sudo -u postgres psql -c "CREATE DATABASE chatwoot_dev OWNER postgres;"
+      sudo -u postgres psql -c "CREATE DATABASE chatwoot_test OWNER postgres;"
+      sudo -u postgres psql -c "ALTER USER postgres CREATEDB;"
+      cp config/database.example.yml config/database.yml
+      sed -i 's/username:.*/username: postgres/' config/database.yml
+      sed -i 's/password:.*/password: password/' config/database.yml
+      bin/setup
+      yarn install
+  - command: bin/rails server -b 0.0.0.0
+
+ports:
+  - port: 3000
+    onOpen: open-preview
+
+env:
+  POSTGRES_USERNAME: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_DATABASE: chatwoot_dev
