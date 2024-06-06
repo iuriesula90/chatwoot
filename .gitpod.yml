@@ -2,22 +2,20 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - name: "Setup and Start"
+  - name: "Setup PostgreSQL and Rails"
     init: |
-      sudo apt update
-      sudo apt install -y postgresql postgresql-contrib libpq-dev
+      # Initialize PostgreSQL without password prompt
       sudo service postgresql start
-      sudo -u postgres psql -c "CREATE USER chatwoot_user WITH PASSWORD 'password';" || true
-      sudo -u postgres psql -c "CREATE DATABASE chatwoot_dev OWNER chatwoot_user;" || true
-      sudo -u postgres psql -c "CREATE DATABASE chatwoot_test OWNER chatwoot_user;" || true
-      sudo -u postgres psql -c "ALTER USER chatwoot_user CREATEDB;" || true
+      psql -U postgres -c "CREATE USER chatwoot_user WITH PASSWORD 'password';" || true
+      psql -U postgres -c "CREATE DATABASE chatwoot_dev OWNER chatwoot_user;" || true
+      psql -U postgres -c "CREATE DATABASE chatwoot_test OWNER chatwoot_user;" || true
+      psql -U postgres -c "ALTER USER chatwoot_user CREATEDB;" || true
       cp config/database.example.yml config/database.yml
       sed -i 's/username:.*/username: chatwoot_user/' config/database.yml
       sed -i 's/password:.*/password: password/' config/database.yml
       bin/setup
       yarn install
-    command: |
-      bin/rails server -b 0.0.0.0
+    command: bin/rails server -b 0.0.0.0
 
 ports:
   - port: 3000
