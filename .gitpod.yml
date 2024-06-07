@@ -21,7 +21,6 @@ tasks:
       cp config/database.example.yml config/database.yml
       sed -i 's/username:.*/username: chatwoot_user/' config/database.yml
       sed -i 's/password:.*/password: password/' config/database.yml
-      sed -i 's/host:.*/host: localhost/' config/database.yml
       gem install bundler -v 2.4.6
       bin/setup
       yarn install
@@ -36,3 +35,7 @@ env:
   POSTGRES_PASSWORD: password
   POSTGRES_DATABASE: chatwoot_dev
   POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  RAILS_MAX_THREADS: 5
+  SIDEKIQ_CONCURRENCY: 10
+  POSTGRES_STATEMENT_TIMEOUT: '14s'
