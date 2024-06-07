@@ -10,12 +10,15 @@ tasks:
       rvm install 3.2.2
       rvm use 3.2.2 --default
 
-      # Initialize PostgreSQL without password prompt
+      # Initialize PostgreSQL and set up user and database
       sudo service postgresql start
-      psql -U postgres -c "CREATE USER chatwoot_user WITH PASSWORD 'password';" || true
-      psql -U postgres -c "CREATE DATABASE chatwoot_dev OWNER chatwoot_user;" || true
-      psql -U postgres -c "CREATE DATABASE chatwoot_test OWNER chatwoot_user;" || true
-      psql -U postgres -c "ALTER USER chatwoot_user CREATEDB;" || true
+      sudo -u postgres psql -c "DROP DATABASE IF EXISTS chatwoot_dev;"
+      sudo -u postgres psql -c "DROP DATABASE IF EXISTS chatwoot_test;"
+      sudo -u postgres psql -c "DROP USER IF EXISTS chatwoot_user;"
+      sudo -u postgres psql -c "CREATE USER chatwoot_user WITH PASSWORD 'password';"
+      sudo -u postgres psql -c "CREATE DATABASE chatwoot_dev OWNER chatwoot_user;"
+      sudo -u postgres psql -c "CREATE DATABASE chatwoot_test OWNER chatwoot_user;"
+      sudo -u postgres psql -c "ALTER USER chatwoot_user CREATEDB;"
       cp config/database.example.yml config/database.yml
       sed -i 's/username:.*/username: chatwoot_user/' config/database.yml
       sed -i 's/password:.*/password: password/' config/database.yml
@@ -27,3 +30,9 @@ tasks:
 ports:
   - port: 3000
     onOpen: open-preview
+
+env:
+  POSTGRES_USERNAME: chatwoot_user
+  POSTGRES_PASSWORD: password
+  POSTGRES_DATABASE: chatwoot_dev
+  POSTGRES_HOST: localhost
