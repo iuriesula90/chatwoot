@@ -2,7 +2,8 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: |
+  - name: "Setup and Start Services"
+    init: |
       # Install RVM and the specific Ruby version
       curl -sSL https://get.rvm.io | bash -s stable
       source /home/gitpod/.rvm/scripts/rvm
