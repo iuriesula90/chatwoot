@@ -19,8 +19,8 @@ tasks:
       sudo -u postgres psql -c "CREATE DATABASE chatwoot_test OWNER chatwoot_user;"
       sudo -u postgres psql -c "ALTER USER chatwoot_user CREATEDB;"
       cp config/database.example.yml config/database.yml
-      sed -i 's/username:.*/username: chatwoot_user/' config/database.yml
-      sed -i 's/password:.*/password: password/' config/database.yml
+      sed -i 's/username: .*/username: chatwoot_user/' config/database.yml
+      sed -i 's/password: .*/password: password/' config/database.yml
       gem install bundler -v 2.4.6
       bin/setup
       yarn install
@@ -29,4 +29,3 @@ tasks:
 ports:
   - port: 3000
     onOpen: open-preview
-
